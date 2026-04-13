@@ -1,60 +1,46 @@
-// Дані будинків з посиланнями на точну навігацію (Google Plus codes)
 const houses = [
-    { name: "Оксфорд", addr: "Максимовича 24", path: "Вхід з боку вул. Максимовича, перша вежа ліворуч", map: "https://maps.app.goo.gl/OxfordExampleLink" },
-    { name: "Кембрідж", addr: "Максимовича 24А", path: "За вежею Оксфорд, всередині двору", map: "https://maps.app.goo.gl/CambridgeExampleLink" },
-    { name: "Ліверпуль", addr: "Максимовича 24Б", path: "Одразу за Кембріджем, біля ЄвроКолегіуму", map: "https://maps.app.goo.gl/LiverpoolExampleLink" },
-    { name: "Честер", addr: "Максимовича 24В", path: "Західна частина, поруч із Ліверпулем", map: "https://maps.app.goo.gl/ChesterExampleLink" },
-    { name: "Бірмінгем", addr: "Максимовича 24Г", path: "Центральна алея, навпроти фонтанів", map: "https://maps.app.goo.gl/BirminghamExampleLink" },
-    { name: "Брістоль", addr: "Максимовича 24Д", path: "Південна частина комплексу", map: "https://maps.app.goo.gl/BristolExampleLink" },
-    { name: "Лондон", addr: "Максимовича 26", path: "Висока вежа в центрі", map: "https://maps.app.goo.gl/LondonExampleLink" },
-    { name: "Манчестер", addr: "Максимовича 26А", path: "Навпроти вежі Лондон, поруч з Брайтоном", map: "https://maps.app.goo.gl/ManchesterExampleLink" },
-    { name: "Брайтон", addr: "Максимовича 26Б", path: "Навпроти Кембріджа та ЄвроКолегіуму", map: "https://maps.app.goo.gl/BrightonExampleLink" },
-    { name: "Ньюкасл", addr: "Максимовича 28", path: "Нова черга, біля Ноттінгема", map: "https://maps.app.goo.gl/NewcastleExampleLink" },
-    { name: "Лінкольн", addr: "Максимовича 28А", path: "Поруч із Ньюкаслом, навпроти Престона", map: "https://maps.app.goo.gl/LincolnExampleLink" },
-    { name: "Віндзор", addr: "Максимовича 28Б", path: "Між Ноттінгемом та Лінкольном", map: "https://maps.app.goo.gl/WindsorExampleLink" },
-    { name: "Ноттінгем", addr: "Максимовича 28Г", path: "Ближче до зони вигулу собак", map: "https://maps.app.goo.gl/NottinghamExampleLink" },
-    { name: "Престон", addr: "Максимовича 28Д", path: "Крайня вежа біля паркінгу", map: "https://maps.app.goo.gl/PrestonExampleLink" },
-    { name: "Євро. Колегіум", addr: "Максимовича 28В", path: "Окремий корпус школи у дворі", map: "https://maps.app.goo.gl/EuroColegiumExampleLink" }
+    { name: "Оксфорд", addr: "Максимовича 24", path: "Перша вежа ліворуч від в'їзду." },
+    { name: "Кембрідж", addr: "Максимовича 24А", path: "За вежею Оксфорд, всередині двору." },
+    { name: "Ліверпуль", addr: "Максимовича 24Б", path: "Поруч із Кембріджем, біля школи." },
+    { name: "Честер", addr: "Максимовича 24В", path: "Західна частина комплексу." },
+    { name: "Бірмінгем", addr: "Максимовича 24Г", path: "Центральна частина, біля фонтанів." },
+    { name: "Брістоль", addr: "Максимовича 24Д", path: "Південна частина комплексу." },
+    { name: "Лондон", addr: "Максимовича 26", path: "Центральна висока вежа." },
+    { name: "Манчестер", addr: "Максимовича 26А", path: "Поруч із Лондоном." },
+    { name: "Брайтон", addr: "Максимовича 26Б", path: "Навпроти ЄвроКолегіуму." },
+    { name: "Ньюкасл", addr: "Максимовича 28", path: "Нова черга, біля Ноттінгема." },
+    { name: "Лінкольн", addr: "Максимовича 28А", path: "Поруч із Ньюкаслом." },
+    { name: "Віндзор", addr: "Максимовича 28Б", path: "Між Ноттінгемом та Лінкольном." },
+    { name: "Ноттінгем", addr: "Максимовича 28Г", path: "Ближче до зони вигулу собак." },
+    { name: "Престон", addr: "Максимовича 28Д", path: "Крайня вежа біля паркінгу." },
+    { name: "Євро. Колегіум", addr: "Максимовича 28В", path: "Окремий корпус школи." }
 ];
 
-// Дані забізнесів (ті ж, що і раніше)
 const businesses = [
     {
-        id: 1,
-        name: "Art Coffee",
-        category: "Кафе",
-        house: "Лондон",
-        phone: "+380500000000",
-        insta: "https://instagram.com/artcoffee",
+        id: 1, name: "Art Coffee", category: "Кафе", house: "Лондон",
+        phone: "+380500000000", insta: "https://instagram.com/artcoffee",
         photo: "https://images.unsplash.com/photo-1501339817302-444d182d3005?w=500",
-        openH: 8, closeH: 21,
-        description: "Найкраща арабіка в Новій Англії. Круасани та зона для роботи."
-    },
-    {
-        id: 2,
-        name: "Лотки",
-        category: "Магазини",
-        house: "Брістоль",
-        phone: "+380670000000",
-        insta: "https://instagram.com/lotky",
-        photo: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500",
-        openH: 0, closeH: 24,
-        description: "Продуктовий магазин біля дому. Цілодобово."
+        openH: 8, closeH: 21, description: "Свіжа кава та десерти."
     }
 ];
 
 function init() {
     const houseSelect = document.getElementById('houseFilter');
-    houses.forEach(h => {
-        houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`;
-    });
+    houses.forEach(h => houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`);
     render(businesses);
 }
 
+// Функція трекінгу
+function trackEvent(action, label) {
+    if (typeof gtag === 'function') {
+        gtag('event', action, { 'event_label': label });
+    }
+}
+
 function checkIsOpen(o, c) {
-    if (o === 0 && c === 24) return true;
     const now = new Date().getHours();
-    return now >= o && now < c;
+    return (o === 0 && c === 24) || (now >= o && now < c);
 }
 
 function render(data) {
@@ -68,46 +54,39 @@ function render(data) {
                     <span class="status-badge ${isOpen ? 'open' : 'closed'}">${isOpen ? '● Відчинено' : '○ Зачинено'}</span>
                     <h3>${item.name}</h3>
                     <p class="address">🏠 буд. ${item.house}</p>
-                    <p class="hours">⏰ ${item.openH}:00 - ${item.closeH}:00</p>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// 1. Модальне вікно ДЕТАЛЕЙ ЗАКЛАДУ (CMS)
 function openModal(id) {
     const item = businesses.find(b => b.id === id);
+    trackEvent('view_business', item.name); // Трекінг перегляду
     const modal = document.getElementById('detailsModal');
     document.getElementById('modalData').innerHTML = `
         <img src="${item.photo}" style="width:100%; border-radius:15px; margin-bottom:15px;">
         <h3>${item.name}</h3>
-        <p class="address">🏠 Локація: будинок ${item.house}</p>
         <p class="full-description">${item.description}</p>
         <div class="btn-group">
-            <a href="${item.insta}" target="_blank" class="btn insta">Instagram</a>
-            <a href="tel:${item.phone}" class="btn call">Дзвонити</a>
+            <a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>
+            <a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>
         </div>
     `;
     modal.style.display = "block";
 }
 
-// 2. Модальне вікно КАРТИ (Навігація до будинків)
 function openMapModal() {
+    trackEvent('view_map', 'Main Map'); // Трекінг відкриття карти
     const modal = document.getElementById('detailsModal');
     document.getElementById('modalData').innerHTML = `
-        <img src="image_0.png" class="schema-img" alt="Схема Нова Англія">
-        <h3>🏠 Навігація до будинків</h3>
-        <p class="address">🇬🇧 Нова Англія, м. Київ, вул. Максимовича</p>
-        
-        <h4 class="house-nav-title">Як пройти:</h4>
+        <img src="image_d62017.jpg" style="width:100%; border-radius:12px;">
+        <h3 style="margin-top:15px;">🏠 Навігація до будинків</h3>
         <div class="houses-nav-container">
             ${houses.map(h => `
                 <div class="nav-card">
                     <strong>${h.name}</strong>
-                    <small>${h.addr}</small>
                     <p>${h.path}</p>
-                    <a href="${h.map}" target="_blank" class="btn map map-sm">Google Maps</a>
                 </div>
             `).join('')}
         </div>
@@ -115,7 +94,6 @@ function openMapModal() {
     modal.style.display = "block";
 }
 
-// Загальні функції
 function closeModal() { document.getElementById('detailsModal').style.display = "none"; }
 
 function filterData() {
@@ -124,7 +102,7 @@ function filterData() {
     const openOnly = document.getElementById('openNowFilter').checked;
 
     const filtered = businesses.filter(b => {
-        const mSearch = b.name.toLowerCase().includes(search) || b.category.toLowerCase().includes(search);
+        const mSearch = b.name.toLowerCase().includes(search);
         const mHouse = house === 'Всі' || b.house === house;
         const mStatus = !openOnly || checkIsOpen(b.openH, b.closeH);
         return mSearch && mHouse && mStatus;
@@ -132,14 +110,12 @@ function filterData() {
     render(filtered);
 }
 
-let currentCategory = 'Всі';
 function setCategory(cat, btn) {
-    currentCategory = cat;
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    filterData();
+    const filtered = cat === 'Всі' ? businesses : businesses.filter(b => b.category === cat);
+    render(filtered);
 }
 
-// Закриття модального вікна кліком на фон
 window.onclick = (e) => { if(e.target == document.getElementById('detailsModal')) closeModal(); }
 init();
