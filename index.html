@@ -3,19 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Нова Англія: Сервіс ЖК</title>
+    <title>Нова Англія: Ваш гід ЖК</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="logo-area">
-            <h1>🇬🇧 Нова Англія</h1>
+            <h1>Нова Англія</h1>
             <p>Ваш гід по містечку в місті</p>
-        </div>
-
-        <div class="houses-section">
-            <h3>Як пройти до будинку?</h3>
-            <div class="houses-grid" id="housesGrid"></div>
         </div>
 
         <input type="text" id="searchInput" placeholder="Шукати заклад або послугу..." onkeyup="filterData()">
@@ -27,7 +22,7 @@
                 <button class="f-btn" onclick="setCategory('Магазини', this)">Магазини</button>
                 <button class="f-btn" onclick="setCategory('Послуги', this)">Послуги</button>
             </div>
-            <div class="house-filter-wrap">
+            <div class="controls-row">
                 <select id="houseFilter" onchange="filterData()">
                     <option value="Всі">Всі будинки</option>
                     </select>
@@ -39,7 +34,13 @@
         </div>
     </header>
 
-    <main id="businessContainer"></main>
+    <main id="mainContent">
+        <button class="main-map-btn" onclick="openMapModal()">
+            🏠 Інтерактивна карта та навігація до будинків
+        </button>
+        
+        <div id="businessContainer"></div>
+    </main>
 
     <div id="detailsModal" class="modal">
         <div class="modal-content">
