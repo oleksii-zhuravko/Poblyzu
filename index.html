@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наш ЖК: Сервіси</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Бізнес нашого ЖК</h1>
+        <input type="text" id="searchInput" placeholder="Пошук закладу або послуги..." onkeyup="filterData()">
+        
+        <div class="filters-container">
+            <div class="category-filters">
+                <button class="f-btn active" onclick="setCategory('Всі', this)">Всі</button>
+                <button class="f-btn" onclick="setCategory('Кафе', this)">Кафе</button>
+                <button class="f-btn" onclick="setCategory('Магазини', this)">Магазини</button>
+                <button class="f-btn" onclick="setCategory('Послуги', this)">Послуги</button>
+            </div>
+            <label class="switch-container">
+                <input type="checkbox" id="openNowFilter" onchange="filterData()"> 
+                <span class="switch-label">Тільки відчинені зараз</span>
+            </label>
+        </div>
+    </header>
+
+    <main id="businessContainer"></main>
+
+    <div class="footer-action">
+        <a href="mailto:oleksii@example.com">➕ Додати свій бізнес</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
