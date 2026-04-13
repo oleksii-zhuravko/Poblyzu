@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JRWRQLN2H5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JRWRQLN2H5');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Нова Англія: Ваш гід ЖК</title>
@@ -13,7 +21,7 @@
             <p>Ваш гід по містечку в місті</p>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Шукати заклад або послугу..." onkeyup="filterData()">
+        <input type="text" id="searchInput" placeholder="Шукати заклади..." onkeyup="filterData()">
         
         <div class="filters-container">
             <div class="category-filters">
@@ -25,7 +33,7 @@
             <div class="controls-row">
                 <select id="houseFilter" onchange="filterData()">
                     <option value="Всі">Всі будинки</option>
-                    </select>
+                </select>
                 <label class="switch-container">
                     <input type="checkbox" id="openNowFilter" onchange="filterData()"> 
                     <span>Зараз відчинено</span>
@@ -36,15 +44,14 @@
 
     <main id="mainContent">
         <button class="main-map-btn" onclick="openMapModal()">
-            🏠 Інтерактивна карта та навігація до будинків
+            🏠 Інтерактивна карта та навігація
         </button>
-        
         <div id="businessContainer"></div>
     </main>
 
     <div id="detailsModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeModal()">×</span>
             <div id="modalData"></div>
         </div>
     </div>
