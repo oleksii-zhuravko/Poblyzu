@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наш ЖК: Сервіси</title>
+    <title>Нова Англія: Сервіс ЖК</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Бізнес нашого ЖК</h1>
-        <input type="text" id="searchInput" placeholder="Пошук закладу або послуги..." onkeyup="filterData()">
+        <div class="logo-area">
+            <h1>🇬🇧 Нова Англія</h1>
+            <p>Ваш гід по містечку в місті</p>
+        </div>
+
+        <div class="houses-section">
+            <h3>Як пройти до будинку?</h3>
+            <div class="houses-grid" id="housesGrid"></div>
+        </div>
+
+        <input type="text" id="searchInput" placeholder="Шукати заклад або послугу..." onkeyup="filterData()">
         
         <div class="filters-container">
             <div class="category-filters">
@@ -18,17 +27,25 @@
                 <button class="f-btn" onclick="setCategory('Магазини', this)">Магазини</button>
                 <button class="f-btn" onclick="setCategory('Послуги', this)">Послуги</button>
             </div>
-            <label class="switch-container">
-                <input type="checkbox" id="openNowFilter" onchange="filterData()"> 
-                <span class="switch-label">Тільки відчинені зараз</span>
-            </label>
+            <div class="house-filter-wrap">
+                <select id="houseFilter" onchange="filterData()">
+                    <option value="Всі">Всі будинки</option>
+                    </select>
+                <label class="switch-container">
+                    <input type="checkbox" id="openNowFilter" onchange="filterData()"> 
+                    <span>Зараз відчинено</span>
+                </label>
+            </div>
         </div>
     </header>
 
     <main id="businessContainer"></main>
 
-    <div class="footer-action">
-        <a href="mailto:oleksii@example.com">➕ Додати свій бізнес</a>
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalData"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
