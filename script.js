@@ -1,4 +1,4 @@
-const SHEET_CSV_URL = 'ПОСИЛАННЯ_НА_ТВОЮ_ТАБЛИЦЮ';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTevBqX2BUL7mq8YMlnHRBzpu09GBQ7aV17J5Pxdp57HUBN_OhkP9NvOdVwXyZF3SrCTjkuhjDRInG2/pub?gid=0&single=true&output=csv';
 
 const houses = [
     { name: "Оксфорд", map: "https://maps.app.goo.gl/3AoxD", path: "Перша вежа ліворуч від в'їзду." },
