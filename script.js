@@ -1,8 +1,5 @@
 /**
  * СЕРВІС "ПОБЛИЗУ" - ГІД ЖК "НОВА АНГЛІЯ"
- * * Налаштування:
- * 1. SHEET_CSV_URL - посилання на опубліковану Google Таблицю (формат CSV).
- * 2. houses - список будинків для фільтрації та карти.
  */
 
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTevBqX2BUL7mq8YMlnHRBzpu09GBQ7aV17J5Pxdp57HUBN_OhkP9NvOdVwXyZF3SrCTjkuhjDRInG2/pub?gid=0&single=true&output=csv';
@@ -26,7 +23,6 @@ const houses = [
 
 let businesses = [];
 
-// Ініціалізація додатку: завантаження фільтрів та даних
 async function init() {
     const houseSelect = document.getElementById('houseFilter');
     houses.forEach(h => houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`);
@@ -37,15 +33,13 @@ async function init() {
         businesses = parseCSV(data);
         render(businesses);
     } catch (error) {
-        console.error("Помилка завантаження даних з Google Таблиць:", error);
+        console.error("Помилка завантаження даних:", error);
     }
 }
 
-// Перетворення сирих даних CSV у масив об'єктів
 function parseCSV(csvText) {
     const lines = csvText.split('\n').filter(line => line.trim() !== "");
     const headers = lines[0].split(',').map(h => h.trim());
-    
     return lines.slice(1).map(line => {
         const values = line.split(',');
         const obj = {};
@@ -56,43 +50,32 @@ function parseCSV(csvText) {
     });
 }
 
-// Надсилання подій у Google Analytics
 function trackEvent(action, label) {
-    if (typeof gtag === 'function') {
-        gtag('event', action, { 'event_label': label });
-    }
+    if (typeof gtag === 'function') gtag('event', action, { 'event_label': label });
 }
 
-// Перетворення часу "HH:mm" у хвилини для точного розрахунку
 function timeToMinutes(timeStr) {
     if (!timeStr || timeStr.includes('Цілодобово') || timeStr === "0") return 0;
     const [hours, minutes] = timeStr.split(':').map(Number);
     return (hours * 60) + (minutes || 0);
 }
 
-// Розрахунок статусу закладу (відчинено/зачинено) на основі часу
 function checkIsOpen(item) {
     const now = new Date();
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
     const currentMinutes = (now.getHours() * 60) + now.getMinutes();
-    
     const openStr = isWeekend ? item.we_open : item.w_open;
     const closeStr = isWeekend ? item.we_close : item.w_close;
 
+    if (!openStr || !closeStr) return false; 
     if (openStr === "0" && (closeStr === "24" || closeStr === "00:00")) return true;
 
     const openMin = timeToMinutes(openStr);
     const closeMin = timeToMinutes(closeStr);
-
-    // Підтримка нічних графіків (якщо зачиняються після опівночі)
-    if (closeMin < openMin) {
-        return currentMinutes >= openMin || currentMinutes < closeMin;
-    }
-
+    if (closeMin < openMin) return currentMinutes >= openMin || currentMinutes < closeMin;
     return currentMinutes >= openMin && currentMinutes < closeMin;
 }
 
-// Створення карток закладів на головній сторінці
 function render(data) {
     const container = document.getElementById('businessContainer');
     container.innerHTML = data.map(item => {
@@ -110,36 +93,50 @@ function render(data) {
     }).join('');
 }
 
-// Відкриття детальної інформації про заклад
+// ФУНКЦІЯ МОДАЛЬНОГО ВІКНА З РОЗУМНОЮ ЛОГІКОЮ ПРИХОВУВАННЯ
 function openModal(id) {
     const item = businesses.find(b => b.id == id);
     trackEvent('view_business', item.name);
     const modal = document.getElementById('detailsModal');
-    
-    const hoursHtml = `
+
+    // 1. ПЕРЕВІРКА ЧАСУ РОБОТИ: якщо хоча б одне поле порожнє, не виводимо блок
+    const hoursHtml = (item.w_open && item.w_close) ? `
         <div style="font-size: 13px; color: #666; margin: 10px 0; background: #f0f2f5; padding: 12px; border-radius: 12px;">
             <p style="margin: 4px 0;">📅 <strong>Пн-Пт:</strong> ${item.w_open} — ${item.w_close}</p>
-            <p style="margin: 4px 0;">🎉 <strong>Сб-Нд:</strong> ${item.we_open} — ${item.we_close}</p>
+            <p style="margin: 4px 0;">🎉 <strong>Сб-Нд:</strong> ${item.we_open || item.w_open} — ${item.we_close || item.w_close}</p>
         </div>
-    `;
+    ` : '';
+
+    // 2. ПЕРЕВІРКА ОПИСУ
+    const descriptionHtml = item.description ? `
+        <p class="full-description" style="line-height: 1.6; color: #444; white-space: pre-wrap; margin: 15px 0;">${item.description}</p>
+    ` : '';
+
+    // 3. ПЕРЕВІРКА КНОПОК (якщо посилання немає в таблиці — кнопка не створюється)
+    const instaBtn = item.insta ? `<a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>` : '';
+    const phoneBtn = item.phone ? `<a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>` : '';
+    const mapBtn = item.map ? `<a href="${item.map}" target="_blank" class="btn map-full" onclick="trackEvent('click_map_biz', '${item.name}')">📍 На карту</a>` : '';
+    
+    // Нові потенційні кнопки (додай колонки 'menu' та 'site' у таблицю, якщо захочеш)
+    const menuBtn = item.menu ? `<a href="${item.menu}" target="_blank" class="btn" style="background: #ff9800; color: white; grid-column: span 2;" onclick="trackEvent('click_menu', '${item.name}')">📖 Меню</a>` : '';
+    const siteBtn = item.site ? `<a href="${item.site}" target="_blank" class="btn" style="background: #4caf50; color: white; grid-column: span 2;" onclick="trackEvent('click_site', '${item.name}')">🌐 Сайт</a>` : '';
 
     document.getElementById('modalData').innerHTML = `
-        <img src="${item.photo}" style="width:100%; border-radius:18px; margin-bottom:15px; object-fit: cover; max-height: 250px;">
+        <img src="${item.photo}" style="width:100%; border-radius:18px; margin-bottom:15px; object-fit: cover; max-height: 250px;" onerror="this.style.display='none'">
         <h2 style="margin: 0 0 10px 0;">${item.name}</h2>
         ${hoursHtml}
-        
-        <p class="full-description" style="line-height: 1.6; color: #444; white-space: pre-wrap; margin: 15px 0;">${item.description}</p>
-        
+        ${descriptionHtml}
         <div class="btn-group">
-            <a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>
-            <a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>
-            <a href="${item.map}" target="_blank" class="btn map-full" onclick="trackEvent('click_map_biz', '${item.name}')">📍 Прокласти маршрут</a>
+            ${menuBtn}
+            ${siteBtn}
+            ${instaBtn}
+            ${phoneBtn}
+            ${mapBtn}
         </div>
     `;
     modal.style.display = "block";
 }
 
-// Вікно загальної карти комплексу
 function openMapModal() {
     trackEvent('view_map', 'Main Map');
     const modal = document.getElementById('detailsModal');
@@ -161,18 +158,14 @@ function openMapModal() {
     modal.style.display = "block";
 }
 
-function closeModal() {
-    document.getElementById('detailsModal').style.display = "none";
-}
+function closeModal() { document.getElementById('detailsModal').style.display = "none"; }
 
-// Логіка пошуку та фільтрації за будинком/статусом
 function filterData() {
     const search = document.getElementById('searchInput').value.toLowerCase();
     const house = document.getElementById('houseFilter').value;
     const openOnly = document.getElementById('openNowFilter').checked;
-
     const filtered = businesses.filter(b => {
-        const mSearch = b.name.toLowerCase().includes(search) || b.description.toLowerCase().includes(search);
+        const mSearch = b.name.toLowerCase().includes(search) || (b.description && b.description.toLowerCase().includes(search));
         const mHouse = house === 'Всі' || b.house === house;
         const mStatus = !openOnly || checkIsOpen(b);
         return mSearch && mHouse && mStatus;
@@ -180,7 +173,6 @@ function filterData() {
     render(filtered);
 }
 
-// Фільтрація за категоріями (Кафе, Магазини і т.д.)
 function setCategory(cat, btn) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -188,10 +180,5 @@ function setCategory(cat, btn) {
     render(filtered);
 }
 
-// Закриття модального вікна при кліку на темний фон
-window.onclick = (e) => {
-    if (e.target == document.getElementById('detailsModal')) closeModal();
-}
-
-// Старт додатку
+window.onclick = (e) => { if (e.target == document.getElementById('detailsModal')) closeModal(); }
 init();
