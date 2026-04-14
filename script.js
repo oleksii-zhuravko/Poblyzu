@@ -1,24 +1,27 @@
+// ВСТАВТЕ СЮДИ ВАШЕ ПОСИЛАННЯ НА CSV З GOOGLE ТАБЛИЦЬ
+// Файл -> Поділитися -> Опублікувати в інтернеті -> Формат CSV
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTevBqX2BUL7mq8YMlnHRBzpu09GBQ7aV17J5Pxdp57HUBN_OhkP9NvOdVwXyZF3SrCTjkuhjDRInG2/pub?gid=0&single=true&output=csv';
 
 const houses = [
-    { name: "Оксфорд", map: "https://maps.app.goo.gl/3AoxD", path: "Перша вежа ліворуч від в'їзду." },
-    { name: "Кембрідж", map: "https://maps.app.goo.gl/3AoxD", path: "За вежею Оксфорд, всередині двору." },
-    { name: "Ліверпуль", map: "https://maps.app.goo.gl/3AoxD", path: "Біля школи та стадіону." },
-    { name: "Честер", map: "https://maps.app.goo.gl/3AoxD", path: "Західна частина комплексу." },
-    { name: "Бірмінгем", map: "https://maps.app.goo.gl/3AoxD", path: "Біля фонтанів." },
-    { name: "Брістоль", map: "https://maps.app.goo.gl/3AoxD", path: "Південна частина комплексу." },
-    { name: "Лондон", map: "https://maps.app.goo.gl/3AoxD", path: "Центральна вежа з годинником." },
-    { name: "Манчестер", map: "https://maps.app.goo.gl/3AoxD", path: "Поруч із вежею Лондон." },
-    { name: "Брайтон", map: "https://maps.app.goo.gl/3AoxD", path: "Навпроти ЄвроКолегіуму." },
-    { name: "Ньюкасл", map: "https://maps.app.goo.gl/3AoxD", path: "Нова черга будинків." },
-    { name: "Лінкольн", map: "https://maps.app.goo.gl/3AoxD", path: "Поруч із Ньюкаслом." },
-    { name: "Віндзор", map: "https://maps.app.goo.gl/3AoxD", path: "Між Ноттінгемом та Лінкольном." },
-    { name: "Ноттінгем", map: "https://maps.app.goo.gl/3AoxD", path: "Ближче до зони вигулу собак." },
-    { name: "Престон", map: "https://maps.app.goo.gl/3AoxD", path: "Крайня вежа біля паркінгу." }
+    { name: "Оксфорд", map: "https://maps.app.goo.gl/xxxx1", path: "Перша вежа ліворуч від в'їзду." },
+    { name: "Кембрідж", map: "https://maps.app.goo.gl/xxxx2", path: "За вежею Оксфорд, всередині двору." },
+    { name: "Ліверпуль", map: "https://maps.app.goo.gl/xxxx3", path: "Поруч із Кембріджем, біля школи." },
+    { name: "Честер", map: "https://maps.app.goo.gl/xxxx4", path: "Західна частина комплексу." },
+    { name: "Бірмінгем", map: "https://maps.app.goo.gl/xxxx5", path: "Центральна частина, біля фонтанів." },
+    { name: "Брістоль", map: "https://maps.app.goo.gl/xxxx6", path: "Південна частина комплексу." },
+    { name: "Лондон", map: "https://maps.app.goo.gl/xxxx7", path: "Центральна висока вежа." },
+    { name: "Манчестер", map: "https://maps.app.goo.gl/xxxx8", path: "Поруч із Лондоном." },
+    { name: "Брайтон", map: "https://maps.app.goo.gl/xxxx9", path: "Навпроти ЄвроКолегіуму." },
+    { name: "Ньюкасл", map: "https://maps.app.goo.gl/xxxx10", path: "Нова черга, біля Ноттінгема." },
+    { name: "Лінкольн", map: "https://maps.app.goo.gl/xxxx11", path: "Поруч із Ньюкаслом." },
+    { name: "Віндзор", map: "https://maps.app.goo.gl/xxxx12", path: "Між Ноттінгемом та Лінкольном." },
+    { name: "Ноттінгем", map: "https://maps.app.goo.gl/xxxx13", path: "Ближче до зони вигулу собак." },
+    { name: "Престон", map: "https://maps.app.goo.gl/xxxx14", path: "Крайня вежа біля паркінгу." }
 ];
 
 let businesses = [];
 
+// Ініціалізація додатку
 async function init() {
     const houseSelect = document.getElementById('houseFilter');
     houses.forEach(h => houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`);
@@ -28,44 +31,70 @@ async function init() {
         const data = await response.text();
         businesses = parseCSV(data);
         render(businesses);
-    } catch (e) { console.error("CSV Load Error:", e); }
+    } catch (error) {
+        console.error("Помилка завантаження даних з Google Таблиць:", error);
+    }
 }
 
+// Парсинг CSV даних
 function parseCSV(csvText) {
-    const lines = csvText.split('\n').filter(l => l.trim() !== "");
+    const lines = csvText.split('\n').filter(line => line.trim() !== "");
     const headers = lines[0].split(',').map(h => h.trim());
+    
     return lines.slice(1).map(line => {
         const values = line.split(',');
-        return headers.reduce((obj, header, i) => {
-            obj[header] = values[i]?.trim();
-            return obj;
-        }, {});
+        const obj = {};
+        headers.forEach((header, i) => {
+            obj[header] = values[i] ? values[i].trim() : "";
+        });
+        return obj;
     });
 }
 
+// Трекінг подій Google Analytics
 function trackEvent(action, label) {
-    if (typeof gtag === 'function') gtag('event', action, { 'event_label': label });
+    if (typeof gtag === 'function') {
+        gtag('event', action, { 'event_label': label });
+    }
 }
 
+// Допоміжна функція для розрахунку хвилин (напр. "07:30" -> 450)
+function timeToMinutes(timeStr) {
+    if (!timeStr || timeStr.includes('Цілодобово') || timeStr === "0") return 0;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return (hours * 60) + (minutes || 0);
+}
+
+// Перевірка чи відчинено зараз
 function checkIsOpen(item) {
     const now = new Date();
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
-    const hour = now.getHours();
+    const currentMinutes = (now.getHours() * 60) + now.getMinutes();
     
-    const openH = parseInt(isWeekend ? item.we_open : item.w_open);
-    const closeH = parseInt(isWeekend ? item.we_close : item.w_close);
+    const openStr = isWeekend ? item.we_open : item.w_open;
+    const closeStr = isWeekend ? item.we_close : item.w_close;
 
-    if (openH === 0 && closeH === 24) return true;
-    return hour >= openH && hour < closeH;
+    if (openStr === "0" && (closeStr === "24" || closeStr === "00:00")) return true;
+
+    const openMin = timeToMinutes(openStr);
+    const closeMin = timeToMinutes(closeStr);
+
+    // Логіка для закладів, що працюють після опівночі
+    if (closeMin < openMin) {
+        return currentMinutes >= openMin || currentMinutes < closeMin;
+    }
+
+    return currentMinutes >= openMin && currentMinutes < closeMin;
 }
 
+// Відображення карток
 function render(data) {
     const container = document.getElementById('businessContainer');
     container.innerHTML = data.map(item => {
         const isOpen = checkIsOpen(item);
         return `
             <div class="card" onclick="openModal('${item.id}')">
-                <img src="${item.photo}" class="card-img" onerror="this.src='https://via.placeholder.com/400x200?text=Poblyzu'">
+                <img src="${item.photo}" class="card-img" onerror="this.src='https://via.placeholder.com/400x200?text=No+Photo'">
                 <div class="card-body">
                     <span class="status-badge ${isOpen ? 'open' : 'closed'}">${isOpen ? '● Відкрито' : '○ Зачинено'}</span>
                     <h3>${item.name}</h3>
@@ -76,40 +105,48 @@ function render(data) {
     }).join('');
 }
 
+// Відкриття модального вікна закладу
 function openModal(id) {
     const item = businesses.find(b => b.id == id);
     trackEvent('view_business', item.name);
     const modal = document.getElementById('detailsModal');
     
-    document.getElementById('modalData').innerHTML = `
-        <img src="${item.photo}" style="width:100%; border-radius:15px; margin-bottom:15px;">
-        <h3>${item.name}</h3>
-        <div style="font-size: 13px; color: #666; margin: 10px 0; background: #f0f2f5; padding: 10px; border-radius: 8px;">
-            <p style="margin: 2px 0;">📅 Пн-Пт: ${item.w_open}:00 - ${item.w_close}:00</p>
-            <p style="margin: 2px 0;">🎉 Сб-Нд: ${item.we_open}:00 - ${item.we_close}:00</p>
+    const hoursHtml = `
+        <div style="font-size: 13px; color: #666; margin: 10px 0; background: #f0f2f5; padding: 12px; border-radius: 12px;">
+            <p style="margin: 4px 0;">📅 <strong>Пн-Пт:</strong> ${item.w_open} — ${item.w_close}</p>
+            <p style="margin: 4px 0;">🎉 <strong>Сб-Нд:</strong> ${item.we_open} — ${item.we_close}</p>
         </div>
-        <p class="full-description">${item.description}</p>
+    `;
+
+    document.getElementById('modalData').innerHTML = `
+        <img src="${item.photo}" style="width:100%; border-radius:18px; margin-bottom:15px; object-fit: cover; max-height: 250px;">
+        <h2 style="margin: 0 0 10px 0;">${item.name}</h2>
+        ${hoursHtml}
+        <p style="line-height: 1.5; color: #444;">${item.description}</p>
         <div class="btn-group">
             <a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>
             <a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>
-            <a href="${item.map}" target="_blank" class="btn map-full" onclick="trackEvent('click_map_biz', '${item.name}')">📍 Прокласти маршрут на карті</a>
+            <a href="${item.map}" target="_blank" class="btn map-full" onclick="trackEvent('click_map_biz', '${item.name}')">📍 Прокласти маршрут</a>
         </div>
     `;
     modal.style.display = "block";
 }
 
+// Відкриття карти ЖК
 function openMapModal() {
     trackEvent('view_map', 'Main Map');
     const modal = document.getElementById('detailsModal');
     document.getElementById('modalData').innerHTML = `
-        <img src="image_d62017.jpg" style="width:100%; border-radius:12px;">
-        <h3 style="margin-top:15px;">🏠 Навігація по ЖК</h3>
+        <img src="image_d62017.jpg" style="width:100%; border-radius:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <h3 style="margin: 20px 0 15px 0;">🏠 Навігація по ЖК</h3>
         <div class="houses-nav-container">
             ${houses.map(h => `
                 <div class="nav-card">
-                    <strong>${h.name}</strong><br>
-                    <small>${h.path}</small>
-                    <a href="${h.map}" target="_blank" class="btn map-sm" style="background: var(--accent);">Google Maps</a>
+                    <div style="padding-right: 90px;">
+                        <strong>${h.name}</strong><br>
+                        <small style="color: #777;">${h.path}</small>
+                    </div>
+                    <a href="${h.map}" target="_blank" class="btn map-sm" style="background: #1a73e8; color: white;">Карта</a>
                 </div>
             `).join('')}
         </div>
@@ -117,15 +154,18 @@ function openMapModal() {
     modal.style.display = "block";
 }
 
-function closeModal() { document.getElementById('detailsModal').style.display = "none"; }
+function closeModal() {
+    document.getElementById('detailsModal').style.display = "none";
+}
 
+// Фільтрація
 function filterData() {
     const search = document.getElementById('searchInput').value.toLowerCase();
     const house = document.getElementById('houseFilter').value;
     const openOnly = document.getElementById('openNowFilter').checked;
 
     const filtered = businesses.filter(b => {
-        const mSearch = b.name.toLowerCase().includes(search);
+        const mSearch = b.name.toLowerCase().includes(search) || b.description.toLowerCase().includes(search);
         const mHouse = house === 'Всі' || b.house === house;
         const mStatus = !openOnly || checkIsOpen(b);
         return mSearch && mHouse && mStatus;
@@ -133,6 +173,7 @@ function filterData() {
     render(filtered);
 }
 
+// Категорії
 function setCategory(cat, btn) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -140,5 +181,10 @@ function setCategory(cat, btn) {
     render(filtered);
 }
 
-window.onclick = (e) => { if(e.target == document.getElementById('detailsModal')) closeModal(); }
+// Закриття модалки при кліку поза нею
+window.onclick = (e) => {
+    if (e.target == document.getElementById('detailsModal')) closeModal();
+}
+
+// Старт
 init();
