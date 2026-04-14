@@ -1,57 +1,73 @@
+const SHEET_CSV_URL = 'ПОСИЛАННЯ_НА_ТВОЮ_ТАБЛИЦЮ';
+
 const houses = [
-    { name: "Оксфорд", addr: "Максимовича 24", path: "Перша вежа ліворуч від в'їзду." },
-    { name: "Кембрідж", addr: "Максимовича 24А", path: "За вежею Оксфорд, всередині двору." },
-    { name: "Ліверпуль", addr: "Максимовича 24Б", path: "Поруч із Кембріджем, біля школи." },
-    { name: "Честер", addr: "Максимовича 24В", path: "Західна частина комплексу." },
-    { name: "Бірмінгем", addr: "Максимовича 24Г", path: "Центральна частина, біля фонтанів." },
-    { name: "Брістоль", addr: "Максимовича 24Д", path: "Південна частина комплексу." },
-    { name: "Лондон", addr: "Максимовича 26", path: "Центральна висока вежа." },
-    { name: "Манчестер", addr: "Максимовича 26А", path: "Поруч із Лондоном." },
-    { name: "Брайтон", addr: "Максимовича 26Б", path: "Навпроти ЄвроКолегіуму." },
-    { name: "Ньюкасл", addr: "Максимовича 28", path: "Нова черга, біля Ноттінгема." },
-    { name: "Лінкольн", addr: "Максимовича 28А", path: "Поруч із Ньюкаслом." },
-    { name: "Віндзор", addr: "Максимовича 28Б", path: "Між Ноттінгемом та Лінкольном." },
-    { name: "Ноттінгем", addr: "Максимовича 28Г", path: "Ближче до зони вигулу собак." },
-    { name: "Престон", addr: "Максимовича 28Д", path: "Крайня вежа біля паркінгу." },
-    { name: "Євро. Колегіум", addr: "Максимовича 28В", path: "Окремий корпус школи." }
+    { name: "Оксфорд", map: "https://maps.app.goo.gl/3AoxD", path: "Перша вежа ліворуч від в'їзду." },
+    { name: "Кембрідж", map: "https://maps.app.goo.gl/3AoxD", path: "За вежею Оксфорд, всередині двору." },
+    { name: "Ліверпуль", map: "https://maps.app.goo.gl/3AoxD", path: "Біля школи та стадіону." },
+    { name: "Честер", map: "https://maps.app.goo.gl/3AoxD", path: "Західна частина комплексу." },
+    { name: "Бірмінгем", map: "https://maps.app.goo.gl/3AoxD", path: "Біля фонтанів." },
+    { name: "Брістоль", map: "https://maps.app.goo.gl/3AoxD", path: "Південна частина комплексу." },
+    { name: "Лондон", map: "https://maps.app.goo.gl/3AoxD", path: "Центральна вежа з годинником." },
+    { name: "Манчестер", map: "https://maps.app.goo.gl/3AoxD", path: "Поруч із вежею Лондон." },
+    { name: "Брайтон", map: "https://maps.app.goo.gl/3AoxD", path: "Навпроти ЄвроКолегіуму." },
+    { name: "Ньюкасл", map: "https://maps.app.goo.gl/3AoxD", path: "Нова черга будинків." },
+    { name: "Лінкольн", map: "https://maps.app.goo.gl/3AoxD", path: "Поруч із Ньюкаслом." },
+    { name: "Віндзор", map: "https://maps.app.goo.gl/3AoxD", path: "Між Ноттінгемом та Лінкольном." },
+    { name: "Ноттінгем", map: "https://maps.app.goo.gl/3AoxD", path: "Ближче до зони вигулу собак." },
+    { name: "Престон", map: "https://maps.app.goo.gl/3AoxD", path: "Крайня вежа біля паркінгу." }
 ];
 
-const businesses = [
-    {
-        id: 1, name: "Art Coffee", category: "Кафе", house: "Лондон",
-        phone: "+380500000000", insta: "https://instagram.com/artcoffee",
-        photo: "https://images.unsplash.com/photo-1501339817302-444d182d3005?w=500",
-        openH: 8, closeH: 21, description: "Свіжа кава та десерти."
-    }
-];
+let businesses = [];
 
-function init() {
+async function init() {
     const houseSelect = document.getElementById('houseFilter');
     houses.forEach(h => houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`);
-    render(businesses);
+
+    try {
+        const response = await fetch(SHEET_CSV_URL);
+        const data = await response.text();
+        businesses = parseCSV(data);
+        render(businesses);
+    } catch (e) { console.error("CSV Load Error:", e); }
 }
 
-// Функція трекінгу
+function parseCSV(csvText) {
+    const lines = csvText.split('\n').filter(l => l.trim() !== "");
+    const headers = lines[0].split(',').map(h => h.trim());
+    return lines.slice(1).map(line => {
+        const values = line.split(',');
+        return headers.reduce((obj, header, i) => {
+            obj[header] = values[i]?.trim();
+            return obj;
+        }, {});
+    });
+}
+
 function trackEvent(action, label) {
-    if (typeof gtag === 'function') {
-        gtag('event', action, { 'event_label': label });
-    }
+    if (typeof gtag === 'function') gtag('event', action, { 'event_label': label });
 }
 
-function checkIsOpen(o, c) {
-    const now = new Date().getHours();
-    return (o === 0 && c === 24) || (now >= o && now < c);
+function checkIsOpen(item) {
+    const now = new Date();
+    const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
+    const hour = now.getHours();
+    
+    const openH = parseInt(isWeekend ? item.we_open : item.w_open);
+    const closeH = parseInt(isWeekend ? item.we_close : item.w_close);
+
+    if (openH === 0 && closeH === 24) return true;
+    return hour >= openH && hour < closeH;
 }
 
 function render(data) {
     const container = document.getElementById('businessContainer');
     container.innerHTML = data.map(item => {
-        const isOpen = checkIsOpen(item.openH, item.closeH);
+        const isOpen = checkIsOpen(item);
         return `
-            <div class="card" onclick="openModal(${item.id})">
-                <img src="${item.photo}" class="card-img">
+            <div class="card" onclick="openModal('${item.id}')">
+                <img src="${item.photo}" class="card-img" onerror="this.src='https://via.placeholder.com/400x200?text=Poblyzu'">
                 <div class="card-body">
-                    <span class="status-badge ${isOpen ? 'open' : 'closed'}">${isOpen ? '● Відчинено' : '○ Зачинено'}</span>
+                    <span class="status-badge ${isOpen ? 'open' : 'closed'}">${isOpen ? '● Відкрито' : '○ Зачинено'}</span>
                     <h3>${item.name}</h3>
                     <p class="address">🏠 буд. ${item.house}</p>
                 </div>
@@ -61,32 +77,39 @@ function render(data) {
 }
 
 function openModal(id) {
-    const item = businesses.find(b => b.id === id);
-    trackEvent('view_business', item.name); // Трекінг перегляду
+    const item = businesses.find(b => b.id == id);
+    trackEvent('view_business', item.name);
     const modal = document.getElementById('detailsModal');
+    
     document.getElementById('modalData').innerHTML = `
         <img src="${item.photo}" style="width:100%; border-radius:15px; margin-bottom:15px;">
         <h3>${item.name}</h3>
+        <div style="font-size: 13px; color: #666; margin: 10px 0; background: #f0f2f5; padding: 10px; border-radius: 8px;">
+            <p style="margin: 2px 0;">📅 Пн-Пт: ${item.w_open}:00 - ${item.w_close}:00</p>
+            <p style="margin: 2px 0;">🎉 Сб-Нд: ${item.we_open}:00 - ${item.we_close}:00</p>
+        </div>
         <p class="full-description">${item.description}</p>
         <div class="btn-group">
             <a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>
             <a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>
+            <a href="${item.map}" target="_blank" class="btn map-full" onclick="trackEvent('click_map_biz', '${item.name}')">📍 Прокласти маршрут на карті</a>
         </div>
     `;
     modal.style.display = "block";
 }
 
 function openMapModal() {
-    trackEvent('view_map', 'Main Map'); // Трекінг відкриття карти
+    trackEvent('view_map', 'Main Map');
     const modal = document.getElementById('detailsModal');
     document.getElementById('modalData').innerHTML = `
         <img src="image_d62017.jpg" style="width:100%; border-radius:12px;">
-        <h3 style="margin-top:15px;">🏠 Навігація до будинків</h3>
+        <h3 style="margin-top:15px;">🏠 Навігація по ЖК</h3>
         <div class="houses-nav-container">
             ${houses.map(h => `
                 <div class="nav-card">
-                    <strong>${h.name}</strong>
-                    <p>${h.path}</p>
+                    <strong>${h.name}</strong><br>
+                    <small>${h.path}</small>
+                    <a href="${h.map}" target="_blank" class="btn map-sm" style="background: var(--accent);">Google Maps</a>
                 </div>
             `).join('')}
         </div>
@@ -104,7 +127,7 @@ function filterData() {
     const filtered = businesses.filter(b => {
         const mSearch = b.name.toLowerCase().includes(search);
         const mHouse = house === 'Всі' || b.house === house;
-        const mStatus = !openOnly || checkIsOpen(b.openH, b.closeH);
+        const mStatus = !openOnly || checkIsOpen(b);
         return mSearch && mHouse && mStatus;
     });
     render(filtered);
