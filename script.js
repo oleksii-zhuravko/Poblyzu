@@ -1,12 +1,17 @@
-// ВСТАВТЕ СЮДИ ВАШЕ ПОСИЛАННЯ НА CSV З GOOGLE ТАБЛИЦЬ
-// Файл -> Поділитися -> Опублікувати в інтернеті -> Формат CSV
+/**
+ * СЕРВІС "ПОБЛИЗУ" - ГІД ЖК "НОВА АНГЛІЯ"
+ * * Налаштування:
+ * 1. SHEET_CSV_URL - посилання на опубліковану Google Таблицю (формат CSV).
+ * 2. houses - список будинків для фільтрації та карти.
+ */
+
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTevBqX2BUL7mq8YMlnHRBzpu09GBQ7aV17J5Pxdp57HUBN_OhkP9NvOdVwXyZF3SrCTjkuhjDRInG2/pub?gid=0&single=true&output=csv';
 
 const houses = [
     { name: "Оксфорд", map: "https://maps.app.goo.gl/xxxx1", path: "Перша вежа ліворуч від в'їзду." },
     { name: "Кембрідж", map: "https://maps.app.goo.gl/xxxx2", path: "За вежею Оксфорд, всередині двору." },
     { name: "Ліверпуль", map: "https://maps.app.goo.gl/xxxx3", path: "Поруч із Кембріджем, біля школи." },
-    { name: "Честер", map: "https://maps.app.goo.gl/xxxx4", path: "Західна частина комплексу." },
+    { name: "Честер, 28Д", map: "https://maps.app.goo.gl/xxxx4", path: "Західна частина комплексу." },
     { name: "Бірмінгем", map: "https://maps.app.goo.gl/xxxx5", path: "Центральна частина, біля фонтанів." },
     { name: "Брістоль", map: "https://maps.app.goo.gl/xxxx6", path: "Південна частина комплексу." },
     { name: "Лондон", map: "https://maps.app.goo.gl/xxxx7", path: "Центральна висока вежа." },
@@ -21,7 +26,7 @@ const houses = [
 
 let businesses = [];
 
-// Ініціалізація додатку
+// Ініціалізація додатку: завантаження фільтрів та даних
 async function init() {
     const houseSelect = document.getElementById('houseFilter');
     houses.forEach(h => houseSelect.innerHTML += `<option value="${h.name}">${h.name}</option>`);
@@ -36,7 +41,7 @@ async function init() {
     }
 }
 
-// Парсинг CSV даних
+// Перетворення сирих даних CSV у масив об'єктів
 function parseCSV(csvText) {
     const lines = csvText.split('\n').filter(line => line.trim() !== "");
     const headers = lines[0].split(',').map(h => h.trim());
@@ -51,21 +56,21 @@ function parseCSV(csvText) {
     });
 }
 
-// Трекінг подій Google Analytics
+// Надсилання подій у Google Analytics
 function trackEvent(action, label) {
     if (typeof gtag === 'function') {
         gtag('event', action, { 'event_label': label });
     }
 }
 
-// Допоміжна функція для розрахунку хвилин (напр. "07:30" -> 450)
+// Перетворення часу "HH:mm" у хвилини для точного розрахунку
 function timeToMinutes(timeStr) {
     if (!timeStr || timeStr.includes('Цілодобово') || timeStr === "0") return 0;
     const [hours, minutes] = timeStr.split(':').map(Number);
     return (hours * 60) + (minutes || 0);
 }
 
-// Перевірка чи відчинено зараз
+// Розрахунок статусу закладу (відчинено/зачинено) на основі часу
 function checkIsOpen(item) {
     const now = new Date();
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
@@ -79,7 +84,7 @@ function checkIsOpen(item) {
     const openMin = timeToMinutes(openStr);
     const closeMin = timeToMinutes(closeStr);
 
-    // Логіка для закладів, що працюють після опівночі
+    // Підтримка нічних графіків (якщо зачиняються після опівночі)
     if (closeMin < openMin) {
         return currentMinutes >= openMin || currentMinutes < closeMin;
     }
@@ -87,7 +92,7 @@ function checkIsOpen(item) {
     return currentMinutes >= openMin && currentMinutes < closeMin;
 }
 
-// Відображення карток
+// Створення карток закладів на головній сторінці
 function render(data) {
     const container = document.getElementById('businessContainer');
     container.innerHTML = data.map(item => {
@@ -105,7 +110,7 @@ function render(data) {
     }).join('');
 }
 
-// Відкриття модального вікна закладу
+// Відкриття детальної інформації про заклад
 function openModal(id) {
     const item = businesses.find(b => b.id == id);
     trackEvent('view_business', item.name);
@@ -122,7 +127,9 @@ function openModal(id) {
         <img src="${item.photo}" style="width:100%; border-radius:18px; margin-bottom:15px; object-fit: cover; max-height: 250px;">
         <h2 style="margin: 0 0 10px 0;">${item.name}</h2>
         ${hoursHtml}
-        <p style="line-height: 1.5; color: #444;">${item.description}</p>
+        
+        <p class="full-description" style="line-height: 1.6; color: #444; white-space: pre-wrap; margin: 15px 0;">${item.description}</p>
+        
         <div class="btn-group">
             <a href="${item.insta}" target="_blank" class="btn insta" onclick="trackEvent('click_insta', '${item.name}')">Instagram</a>
             <a href="tel:${item.phone}" class="btn call" onclick="trackEvent('click_call', '${item.name}')">Дзвонити</a>
@@ -132,7 +139,7 @@ function openModal(id) {
     modal.style.display = "block";
 }
 
-// Відкриття карти ЖК
+// Вікно загальної карти комплексу
 function openMapModal() {
     trackEvent('view_map', 'Main Map');
     const modal = document.getElementById('detailsModal');
@@ -158,7 +165,7 @@ function closeModal() {
     document.getElementById('detailsModal').style.display = "none";
 }
 
-// Фільтрація
+// Логіка пошуку та фільтрації за будинком/статусом
 function filterData() {
     const search = document.getElementById('searchInput').value.toLowerCase();
     const house = document.getElementById('houseFilter').value;
@@ -173,7 +180,7 @@ function filterData() {
     render(filtered);
 }
 
-// Категорії
+// Фільтрація за категоріями (Кафе, Магазини і т.д.)
 function setCategory(cat, btn) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -181,10 +188,10 @@ function setCategory(cat, btn) {
     render(filtered);
 }
 
-// Закриття модалки при кліку поза нею
+// Закриття модального вікна при кліку на темний фон
 window.onclick = (e) => {
     if (e.target == document.getElementById('detailsModal')) closeModal();
 }
 
-// Старт
+// Старт додатку
 init();
