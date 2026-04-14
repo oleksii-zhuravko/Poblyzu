@@ -55,13 +55,21 @@ header { position: sticky; top: 0; background: var(--bg); padding-bottom: 10px; 
 .nav-card { background: #f8f9fa; padding: 12px; border-radius: 12px; border: 1px solid #eee; position: relative; }
 .btn.map-sm { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 8px 12px; font-size: 11px; }
 
+/* Примусове виправлення для повного опису */
 .full-description {
-    line-height: 1.6;
-    color: #444;
-    font-size: 15px;
-    white-space: pre-wrap; /* Це змусить текст переноситися */
-    word-wrap: break-word;
-    margin-top: 15px;
-    margin-bottom: 20px;
-    display: block;
+    display: block !important;
+    height: auto !important;           /* Дозволяємо блоку рости вниз */
+    max-height: none !important;       /* Прибираємо будь-які ліміти по висоті */
+    white-space: pre-wrap !important;  /* ПРИМУСОВО вмикаємо переноси рядків */
+    overflow: visible !important;      /* Робимо текст видимим, навіть якщо він довгий */
+    line-height: 1.6 !important;       /* Робимо нормальний інтервал між рядками */
+    text-overflow: clip !important;    /* Вимикаємо три крапки в кінці рядка */
+}
+
+/* Переконуємось, що саме вікно дозволяє прокрутку, якщо тексту дуже багато */
+.modal-content {
+    max-height: 85vh !important;       /* Вікно займає максимум 85% висоти екрану */
+    overflow-y: auto !important;       /* Вмикаємо вертикальну прокрутку всередині вікна */
+    display: flex !important;
+    flex-direction: column !important;
 }
