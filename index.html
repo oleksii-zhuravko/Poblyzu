@@ -1,60 +1,817 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JRWRQLN2H5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-JRWRQLN2H5');
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poblyzu — Нова Англія</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1A18;
+    --muted: #7A7A72;
+    --accent: #2D6A4F;
+    --accent-light: #D8EEE4;
+    --accent2: #E76F51;
+    --border: rgba(26,26,24,0.1);
+    --card-bg: #FDFAF4;
+    --pill-bg: #EDEAE2;
+  }
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поблизу: Гід ЖК Нова Англія</title>
-    <link rel="stylesheet" href="style.css">
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .logo-word {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    font-size: 11px;
+    background: var(--accent);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 48px 24px 36px;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 7vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 420px;
+    margin: 0 auto 32px;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 14px 48px 14px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 40px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus {
+    border-color: var(--accent);
+  }
+
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  /* CATEGORIES */
+  .categories {
+    max-width: 800px;
+    margin: 28px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cat-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 400;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cat-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  .cat-btn.active {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  .cat-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    max-width: 800px;
+    margin: 28px auto 0;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stats-count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .stats-count strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .add-btn {
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.15s;
+  }
+
+  .add-btn:hover { opacity: 0.8; }
+
+  /* GRID */
+  .grid {
+    max-width: 800px;
+    margin: 20px auto 60px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: default;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+  }
+
+  .card-top {
+    padding: 18px 18px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .card-emoji {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .card-info { flex: 1; min-width: 0; }
+
+  .card-name {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-cat {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .card-status {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .open { background: #D8EEE4; color: #1A5C3A; }
+  .closed { background: #F2E8E4; color: #8B3A20; }
+
+  .card-body {
+    padding: 0 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .meta-icon { width: 14px; flex-shrink: 0; opacity: 0.5; }
+
+  .card-actions {
+    border-top: 1px solid var(--border);
+    padding: 10px 18px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-weight: 400;
+  }
+
+  .action-btn:hover { background: var(--pill-bg); color: var(--ink); border-color: var(--ink); }
+
+  .action-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .action-btn.primary:hover { opacity: 0.88; }
+
+  /* EMPTY STATE */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 16px; opacity: 0.4; }
+  .empty h3 { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .empty p { font-size: 14px; font-weight: 300; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 28px;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--pill-bg);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-emoji { font-size: 36px; margin-bottom: 12px; display: block; }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 4px; }
+  .modal-cat { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+  .modal-section { margin-bottom: 20px; }
+  .modal-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+  .modal-value { font-size: 14px; color: var(--ink); line-height: 1.6; font-weight: 300; }
+
+  .modal-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .modal-pill {
+    background: var(--pill-bg);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+  .modal-actions a { flex: 1; text-align: center; }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero { padding: 32px 20px 24px; }
+    .card-name { white-space: normal; }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <div class="logo-area">
-            <img src="Poblyzu_logo.png" alt="Поблизу" class="main-logo">
-        </div>
 
-        <input type="text" id="searchInput" placeholder="Шукати заклади..." onkeyup="filterData()">
-        
-        <div class="filters-container">
-            <div class="category-filters">
-                <button class="f-btn active" onclick="setCategory('Всі', this)">Всі</button>
-                <button class="f-btn" onclick="setCategory('Кафе', this)">Кафе</button>
-                <button class="f-btn" onclick="setCategory('Магазини', this)">Магазини</button>
-                <button class="f-btn" onclick="setCategory('Послуги', this)">Послуги</button>
-            </div>
-            <div class="controls-row">
-                <select id="houseFilter" onchange="filterData()">
-                    <option value="Всі">Всі будинки</option>
-                </select>
-                <label class="switch-container">
-                    <input type="checkbox" id="openNowFilter" onchange="filterData()"> 
-                    <span>Зараз відчинено</span>
-                </label>
-            </div>
-        </div>
-    </header>
+<header>
+  <div class="logo">
+    <span class="logo-word">Poblyzu</span>
+    <span class="logo-sub">Нова Англія</span>
+  </div>
+  <span class="header-badge">ЖК-довідник</span>
+</header>
 
-    <main id="mainContent">
-        <button class="main-map-btn" onclick="openMapModal()">
-            🏠 Знайти будинок
-        </button>
-        <div id="businessContainer"></div>
-    </main>
+<div class="hero">
+  <h1>Усе що поруч —<br><em>під рукою</em></h1>
+  <p>Магазини, кафе, салони та сервіси вашого ЖК. Знайдіть потрібне за секунди.</p>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Назва, послуга, поверх..." autocomplete="off">
+    <span class="search-icon">⌕</span>
+  </div>
+</div>
 
-    <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">×</span>
-            <div id="modalData"></div>
-        </div>
+<div class="categories" id="categories">
+  <button class="cat-btn active" data-cat="all"><span class="cat-dot"></span>Всі</button>
+  <button class="cat-btn" data-cat="Продукти"><span class="cat-dot"></span>Продукти</button>
+  <button class="cat-btn" data-cat="Кафе та їжа"><span class="cat-dot"></span>Кафе та їжа</button>
+  <button class="cat-btn" data-cat="Краса та здоров'я"><span class="cat-dot"></span>Краса та здоров'я</button>
+  <button class="cat-btn" data-cat="Послуги"><span class="cat-dot"></span>Послуги</button>
+  <button class="cat-btn" data-cat="Дитяче"><span class="cat-dot"></span>Дитяче</button>
+  <button class="cat-btn" data-cat="Спорт"><span class="cat-dot"></span>Спорт</button>
+</div>
+
+<div class="stats-bar">
+  <span class="stats-count">Знайдено: <strong id="countDisplay">0</strong></span>
+  <a href="#" id="addBizBtn" class="add-btn">+ Додати бізнес</a>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  Poblyzu · ЖК Нова Англія · <a href="#" id="footerAddBtn">Додати свій бізнес</a>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">×</button>
+    <span class="modal-emoji" id="mEmoji"></span>
+    <div class="modal-title" id="mName"></div>
+    <div class="modal-cat" id="mCat"></div>
+    <div class="modal-section">
+      <div class="modal-label">Де знайти</div>
+      <div class="modal-value" id="mLocation"></div>
     </div>
+    <div class="modal-section">
+      <div class="modal-label">Години роботи</div>
+      <div class="modal-value" id="mHours"></div>
+    </div>
+    <div class="modal-section" id="mServicesSection">
+      <div class="modal-label">Товари та послуги</div>
+      <div class="modal-pills" id="mServices"></div>
+    </div>
+    <div class="modal-section" id="mContactSection">
+      <div class="modal-label">Контакти</div>
+      <div class="modal-value" id="mContact"></div>
+    </div>
+    <div class="modal-section" id="mDescSection">
+      <div class="modal-label">Про заклад</div>
+      <div class="modal-value" id="mDesc"></div>
+    </div>
+    <div class="modal-actions" id="mActions"></div>
+  </div>
+</div>
 
-    <script src="script.js"></script>
+<script>
+// =====================================================
+// КОНФІГУРАЦІЯ: замініть SHEET_ID на ваш Google Sheets ID
+// Таблиця має бути опублікована (Файл → Поділитися → Опублікувати у веб)
+// =====================================================
+const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID';
+const USE_DEMO_DATA = true; // Змініть на false після підключення Google Sheets
+
+// =====================================================
+// ДЕМО-ДАНІ (видаліть або залиште як приклад для тестування)
+// =====================================================
+const DEMO_DATA = [
+  {
+    name: 'Bakehouse 1892',
+    category: 'Кафе та їжа',
+    emoji: '🥐',
+    location: 'Корпус А, 1-й поверх, вхід з вул. Паркової',
+    hours: 'Пн–Пт: 07:00–21:00\nСб–Нд: 08:00–22:00',
+    services: ['Каву', 'Випічку', 'Сніданки', 'Обіди', 'Десерти'],
+    phone: '+38 050 123 45 67',
+    instagram: '@bakehouse1892',
+    maps: 'https://maps.google.com',
+    description: 'Затишна кав'ярня з власною випічкою. Ідеальний ранок починається тут.'
+  },
+  {
+    name: 'FreshMart',
+    category: 'Продукти',
+    emoji: '🛒',
+    location: 'Корпус Б, цокольний поверх, вхід з двору',
+    hours: 'Щоденно: 08:00–22:00',
+    services: ['Овочі та фрукти', 'М'ясо та риба', 'Молочні продукти', 'Хліб', 'Напої'],
+    phone: '+38 067 234 56 78',
+    instagram: '',
+    maps: 'https://maps.google.com',
+    description: 'Міні-маркет з акцентом на свіжу локальну продукцію.'
+  },
+  {
+    name: 'Salon Gloss',
+    category: 'Краса та здоров'я',
+    emoji: '💇',
+    location: 'Корпус А, 1-й поверх, правило крило',
+    hours: 'Пн–Сб: 09:00–20:00\nНд: 10:00–17:00',
+    services: ['Стрижки', 'Фарбування', 'Манікюр', 'Педикюр', 'Брови'],
+    phone: '+38 073 345 67 89',
+    instagram: '@salon.gloss',
+    maps: 'https://maps.google.com',
+    description: 'Сучасний салон краси з командою досвідчених майстрів. Онлайн-запис у Instagram.'
+  },
+  {
+    name: 'Дитячий простір «Сонечко»',
+    category: 'Дитяче',
+    emoji: '🧸',
+    location: 'Корпус В, 2-й поверх',
+    hours: 'Пн–Пт: 09:00–19:00\nСб–Нд: 10:00–18:00',
+    services: ['Розвивальні заняття', 'Англійська для дітей', 'Творчі майстер-класи', 'Ігрова зона'],
+    phone: '+38 063 456 78 90',
+    instagram: '@sonechko.kids',
+    maps: 'https://maps.google.com',
+    description: 'Розвивальний центр для дітей від 1 до 10 років.'
+  },
+  {
+    name: 'Fix&Go',
+    category: 'Послуги',
+    emoji: '🔧',
+    location: 'Корпус Б, 1-й поверх, майстерня',
+    hours: 'Пн–Пт: 10:00–19:00\nСб: 10:00–15:00',
+    services: ['Ремонт телефонів', 'Ремонт планшетів', 'Заміна екранів', 'Ремонт ноутбуків'],
+    phone: '+38 050 567 89 01',
+    instagram: '',
+    maps: 'https://maps.google.com',
+    description: 'Швидкий ремонт техніки. Більшість замовлень — в день звернення.'
+  },
+  {
+    name: 'FitZone',
+    category: 'Спорт',
+    emoji: '🏋️',
+    location: 'Корпус В, цокольний поверх',
+    hours: 'Пн–Пт: 06:30–22:00\nСб–Нд: 08:00–20:00',
+    services: ['Тренажерна зала', 'Йога', 'TRX', 'Кросфіт', 'Персональний тренер'],
+    phone: '+38 097 678 90 12',
+    instagram: '@fitzone.nova',
+    maps: 'https://maps.google.com',
+    description: 'Сучасний фітнес-клуб для жильців ЖК. Абонемент від 900 грн/міс.'
+  }
+];
+
+// =====================================================
+// ЛОГІКА ДОДАТКУ
+// =====================================================
+let allData = [];
+let activeCategory = 'all';
+let searchQuery = '';
+
+function isOpenNow(hoursStr) {
+  if (!hoursStr) return null;
+  const now = new Date();
+  const day = now.getDay();
+  const time = now.getHours() * 60 + now.getMinutes();
+  const lines = hoursStr.split('\n');
+  const dayMap = { 0: 'нд', 1: 'пн', 2: 'вт', 3: 'ср', 4: 'чт', 5: 'пт', 6: 'сб' };
+  const todayKey = dayMap[day];
+  for (const line of lines) {
+    const lo = line.toLowerCase();
+    if (!lo.includes(todayKey) && !lo.includes('щоденно')) continue;
+    const times = lo.match(/(\d{1,2}):(\d{2})\s*[–\-]\s*(\d{1,2}):(\d{2})/);
+    if (!times) continue;
+    const open = parseInt(times[1]) * 60 + parseInt(times[2]);
+    const close = parseInt(times[3]) * 60 + parseInt(times[4]);
+    return time >= open && time < close;
+  }
+  return null;
+}
+
+const emojiColors = {
+  '🛒': '#FFF3CD', '🥐': '#FFE4CC', '💇': '#F5D0F5', '🧸': '#D0EEFF',
+  '🔧': '#E8E8E8', '🏋️': '#D0FFE8', '🍕': '#FFE0E0', '💊': '#E8F5E9',
+  '📦': '#FFF8E1', '✂️': '#FCE4EC'
+};
+
+function getEmojiColor(emoji) {
+  return emojiColors[emoji] || '#EDEAE2';
+}
+
+function renderCards(data) {
+  const grid = document.getElementById('grid');
+  document.getElementById('countDisplay').textContent = data.length;
+  if (!data.length) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">⊘</div><h3>Нічого не знайдено</h3><p>Спробуйте змінити пошук або категорію</p></div>`;
+    return;
+  }
+  grid.innerHTML = data.map((b, idx) => {
+    const openStatus = isOpenNow(b.hours);
+    const statusHtml = openStatus === null ? '' :
+      `<span class="card-status ${openStatus ? 'open' : 'closed'}">${openStatus ? 'Відкрито' : 'Зачинено'}</span>`;
+    return `
+    <div class="card" onclick="openModal(${idx})">
+      <div class="card-top">
+        <div class="card-emoji" style="background:${getEmojiColor(b.emoji)}">${b.emoji}</div>
+        <div class="card-info">
+          <div class="card-name">${b.name}</div>
+          <div class="card-cat">${b.category}</div>
+        </div>
+        ${statusHtml}
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-row">
+            <svg class="meta-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5z"/>
+              <circle cx="8" cy="6" r="1.5"/>
+            </svg>
+            ${b.location}
+          </div>
+          ${b.hours ? `<div class="meta-row">
+            <svg class="meta-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3.5l2 1.5"/>
+            </svg>
+            ${b.hours.split('\n')[0]}
+          </div>` : ''}
+        </div>
+        ${b.services && b.services.length ? `<div class="card-desc">${b.services.slice(0,3).join(' · ')}${b.services.length > 3 ? ' · ...' : ''}</div>` : ''}
+      </div>
+      <div class="card-actions">
+        ${b.maps ? `<a class="action-btn primary" href="${b.maps}" target="_blank" onclick="event.stopPropagation()">На карті</a>` : ''}
+        ${b.phone ? `<a class="action-btn" href="tel:${b.phone.replace(/\s/g,'')}" onclick="event.stopPropagation()">Зателефонувати</a>` : ''}
+        <button class="action-btn" onclick="event.stopPropagation();openModal(${idx})">Детальніше</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterAndRender() {
+  let filtered = allData.filter(b => {
+    const matchCat = activeCategory === 'all' || b.category === activeCategory;
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q ||
+      b.name.toLowerCase().includes(q) ||
+      (b.services || []).some(s => s.toLowerCase().includes(q)) ||
+      b.location.toLowerCase().includes(q) ||
+      b.category.toLowerCase().includes(q) ||
+      (b.description || '').toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+  renderCards(filtered);
+  window._filtered = filtered;
+}
+
+// Modal
+function openModal(idx) {
+  const b = (window._filtered || allData)[idx];
+  document.getElementById('mEmoji').textContent = b.emoji;
+  document.getElementById('mName').textContent = b.name;
+  document.getElementById('mCat').textContent = b.category;
+  document.getElementById('mLocation').textContent = b.location;
+  document.getElementById('mHours').textContent = b.hours || '—';
+  const pills = document.getElementById('mServices');
+  if (b.services && b.services.length) {
+    document.getElementById('mServicesSection').style.display = '';
+    pills.innerHTML = b.services.map(s => `<span class="modal-pill">${s}</span>`).join('');
+  } else {
+    document.getElementById('mServicesSection').style.display = 'none';
+  }
+  const contact = [];
+  if (b.phone) contact.push(b.phone);
+  if (b.instagram) contact.push(b.instagram);
+  if (contact.length) {
+    document.getElementById('mContactSection').style.display = '';
+    document.getElementById('mContact').textContent = contact.join(' · ');
+  } else {
+    document.getElementById('mContactSection').style.display = 'none';
+  }
+  if (b.description) {
+    document.getElementById('mDescSection').style.display = '';
+    document.getElementById('mDesc').textContent = b.description;
+  } else {
+    document.getElementById('mDescSection').style.display = 'none';
+  }
+  const actions = document.getElementById('mActions');
+  const btns = [];
+  if (b.maps) btns.push(`<a class="action-btn primary" href="${b.maps}" target="_blank">Відкрити на карті</a>`);
+  if (b.phone) btns.push(`<a class="action-btn" href="tel:${b.phone.replace(/\s/g,'')}">Зателефонувати</a>`);
+  if (b.instagram) btns.push(`<a class="action-btn" href="https://instagram.com/${b.instagram.replace('@','')}" target="_blank">Instagram</a>`);
+  actions.innerHTML = btns.join('');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('open');
+});
+
+// Categories
+document.getElementById('categories').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-btn');
+  if (!btn) return;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCategory = btn.dataset.cat;
+  filterAndRender();
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  filterAndRender();
+});
+
+// Add business link
+const openForm = () => window.open('https://docs.google.com/forms/d/YOUR_FORM_ID', '_blank');
+document.getElementById('addBizBtn').addEventListener('click', e => { e.preventDefault(); openForm(); });
+document.getElementById('footerAddBtn').addEventListener('click', e => { e.preventDefault(); openForm(); });
+
+// =====================================================
+// ЗАВАНТАЖЕННЯ ДАНИХ
+// =====================================================
+async function loadFromSheets() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.slice(47, -2));
+    const rows = json.table.rows;
+    return rows.slice(1).map(r => ({
+      name:        r.c[0]?.v || '',
+      category:    r.c[1]?.v || '',
+      emoji:       r.c[2]?.v || '📍',
+      location:    r.c[3]?.v || '',
+      hours:       r.c[4]?.v || '',
+      services:    (r.c[5]?.v || '').split(',').map(s => s.trim()).filter(Boolean),
+      phone:       r.c[6]?.v || '',
+      instagram:   r.c[7]?.v || '',
+      maps:        r.c[8]?.v || '',
+      description: r.c[9]?.v || '',
+    }));
+  } catch (e) {
+    console.warn('Sheets недоступний, використовуються демо-дані:', e);
+    return DEMO_DATA;
+  }
+}
+
+async function init() {
+  allData = USE_DEMO_DATA ? DEMO_DATA : await loadFromSheets();
+  window._filtered = allData;
+  filterAndRender();
+}
+
+init();
+</script>
 </body>
 </html>
